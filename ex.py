@@ -292,8 +292,8 @@ app.layout = html.Div([
           sort_mode="multi",
           column_selectable="single",
           row_selectable="multi",
-          selected_columns=[],
-          selected_rows=[],
+#           selected_columns=[],
+#           selected_rows=[],
           page_action="native",
           page_current= 0,
           page_size= 10,
@@ -302,7 +302,7 @@ app.layout = html.Div([
     ], className='row',style={'display': 'inline-block', 'vertical-align': 'top'}),
 
 ])
-# Hàm callback đưa ra dữ liệu sau mỗi lần lựa chon
+# Hàm callback đưa ra dữ liệu sau mỗi lần lựa chọn thay đổi giá trị trong bảng
 @app.callback(
     Output(component_id='datatable-interactivity', component_property='data'),
     Output(component_id='datatable-interactivity', component_property='tooltip_data'),
