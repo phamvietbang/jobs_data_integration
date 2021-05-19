@@ -4,3 +4,4 @@ ui for data integration
 pip install dash
 ## chay chương trình
 python ex.py
+vào chrome chạy localhost:8050
