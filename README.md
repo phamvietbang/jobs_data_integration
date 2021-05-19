@@ -1,6 +1,6 @@
 # ui
 ui for data integration
-##cài đặt
+## cài đặt
 pip install dash
-##chay chương trình
+## chay chương trình
 python ex.py
