@@ -306,6 +306,7 @@ app.layout = html.Div([
 @app.callback(
     Output(component_id='datatable-interactivity', component_property='data'),
     Output(component_id='datatable-interactivity', component_property='tooltip_data'),
+    # Input(component_id='search', component_property='value'),
     Input(component_id='location', component_property='value'),
     Input(component_id='types', component_property='value'),
     # Input(component_id='degree', component_property='value'),
@@ -314,8 +315,11 @@ app.layout = html.Div([
 )
 
 
-# def update_data(location_, types_, degree_, experience_, gender_):
-def update_data(location_, types_):
+# def update_data(search_, location_, types_, degree_, experience_, gender_):
+def update_data(, location_, types_):
+  # search trả về value
+  # if search_!='':
+  # Viết hàm search tìm các dữ liệu theo search rồi gán cho dataframe dff
   if location_ != [] and types_ != []:
     dff = find_df(df, 'working_location', location_)
     dff = find_df(df, 'types', types_)
