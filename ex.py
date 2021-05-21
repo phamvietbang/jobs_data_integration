@@ -6,7 +6,6 @@ from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 import numpy as np
 import pandas as pd
-# import search as sch
 from timing import timing
 from index import Index
 import pandas as pd
@@ -45,11 +44,20 @@ def load_documents(df0):
             yield JobSumary(ID=doc_id, title=title)
             doc_id += 1
 
-#Hàm lọc theo giá trị cột
-def find_df(d, label, data):
-    dff = d[d[label] == data[0]]
+#Hàm lọc theo giá trị cột Work Location
+def findWorkLocation(d, label, data):
+    dff = d[d[label].str.contains(data[0])]
     for i in range(len(data)-1):
-      dff = pd.concat([dff, d[d[label] == data[i+1]]])
+      dff = pd.concat([dff, d[d[label].str.contains(data[i+1])]])
+    return dff
+#Hàm lọc theo giá trị cột types
+def findTypes(d, label, data):
+    k=[]
+    for j in range(len(data)):
+      for i in d.index:
+          if data[j] in d[label][i] and i not in k: k.append(i)
+    if k!=[]: dff = df.iloc[k]
+    else: dff = d
     return dff
 #Hàm lọc theo search:
 def searchItems(df, index, data):       
@@ -59,14 +67,14 @@ def searchItems(df, index, data):
     return dff
 
 df = pd.read_json('./alljob.json')
-df = df.drop('_id', 1)
+# df = df.drop('_id', 1)
 
 with open('./list_types.txt', mode='r', encoding='utf-8') as f:
   dtype = f.read().split('\n')
 with open('./list_degree.txt', mode='r', encoding='utf-8') as f:
   ddegree = f.read().split('\n')
 index = index_documents(load_documents(df), Index())
-df1 = df[:][:7000]
+df1 = df.head(7000)
 # page layout
 app = dash.Dash(external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css'])
 
@@ -155,7 +163,7 @@ app.layout = html.Div([
                   id='types',
                   # Nên sử dụng dạng sau:
                   options=[{'label': i, 'value': i} for i in dtype],
-                  value = "Y tế - Dược",
+                  value = "Chăm Sóc Khách Hàng",
                   multi=True
               ),
               
@@ -287,18 +295,18 @@ def update_data(search_, location_,types_,degree_, gender_):
     if search_ != '':
       dff = searchItems(dff, index, search_)
     if location_ != []:
-      dff = find_df(dff, 'working_location', location_)
+      dff = findWorkLocation(dff, 'working_location', location_)
     if types_ != []:
-      dff = find_df(dff, 'types', types_)
+      dff = findTypes(dff, 'types', types_)
     dff = dff[dff['gender'] == gender_]
     dff = dff[dff['degree'] == degree_]
-    
-    data = dff[:][:7000].to_dict('records')
+    dff = dff.head(7000)
+    data = dff.to_dict('records')
     tooltip_data=[
         {
             column: {'value': str(value), 'type': 'markdown'}
             for column, value in row.items()
-        } for row in dff[:][:7000].to_dict('records')
+        } for row in dff.to_dict('records')
     ]
     return data, tooltip_data
 
