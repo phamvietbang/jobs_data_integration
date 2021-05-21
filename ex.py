@@ -6,14 +6,58 @@ from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 import numpy as np
 import pandas as pd
+# import search as sch
+from timing import timing
+from index import Index
+import pandas as pd
+from collections import Counter
+from dataclasses import dataclass
+from analysis import analyze
+
+@dataclass
+class JobSumary:
+    ID: int
+    title: str
+
+    @property
+    def fulltext(self):
+        return ' '.join([self.title])
+
+    def analyze(self):
+        self.term_frequencies = Counter(analyze(self.fulltext))
+
+    def term_frequency(self, term):
+        return self.term_frequencies.get(term, 0)
+
+@timing
+def index_documents(documents, index):
+    for i, document in enumerate(documents):
+        index.index_document(document)
+        if i % 5000 == 0:
+            print(f'Indexed {i} documents', end='\r')
+    return index
+
+def load_documents():
+    df0 = pd.read_json('job_news.json')
+    doc_id = 0
+    for title in df0['title'].tolist():
+        if title:
+            yield JobSumary(ID=doc_id, title=title)
+            doc_id += 1
+
 #Hàm lọc theo giá trị cột
 def find_df(d, label, data):
-  dff = d[d[label] == data[0]]
-  for i in range(len(data)-1):
-    dff = pd.concat([dff, d[d[label] == data[i+1]]])
-  return dff
+    dff = d[d[label] == data[0]]
+    for i in range(len(data)-1):
+      dff = pd.concat([dff, d[d[label] == data[i+1]]])
+    return dff
 #Hàm lọc theo search:
-# def search(df, data):
+def searchItems(df, data):
+    index = index_documents(load_documents(), Index())   
+    # print(f'Index contains {len(index.documents)} documents')
+    search_result = index.search(data, search_type='AND', rank=True)
+    dff = df.iloc[search_result]
+    return dff
 
 df = pd.read_json('./job_news.json')
 df = df.drop('_id', 1)
@@ -26,8 +70,8 @@ app.layout = html.Div([
     html.Div(children=[
             html.Div(children=[
               # chưa làm được hàm search
-              dcc.Input(id='search', value='Hà Nội', type='text'),
-              html.Button('search', id='submit-val', n_clicks=0),
+              html.Label('Search'),
+              dcc.Input(id='search', value='Kinh doanh Hà Nội', type='text'),
               html.Label('Working_location'),
               dcc.Dropdown(
                   id='location',
@@ -306,9 +350,9 @@ app.layout = html.Div([
 @app.callback(
     Output(component_id='datatable-interactivity', component_property='data'),
     Output(component_id='datatable-interactivity', component_property='tooltip_data'),
-    # Input(component_id='search', component_property='value'),
+    Input(component_id='search', component_property='value'),
     Input(component_id='location', component_property='value'),
-    Input(component_id='types', component_property='value'),
+    # Input(component_id='types', component_property='value'),
     # Input(component_id='degree', component_property='value'),
     # Input(component_id='experience', component_property='value'),
     # Input(component_id='gender', component_property='value'),
@@ -316,39 +360,35 @@ app.layout = html.Div([
 
 
 # def update_data(search_, location_, types_, degree_, experience_, gender_):
-def update_data(, location_, types_):
-  # search trả về value
-  # if search_!='':
-  # Viết hàm search tìm các dữ liệu theo search rồi gán cho dataframe dff
-  if location_ != [] and types_ != []:
-    dff = find_df(df, 'working_location', location_)
-    dff = find_df(df, 'types', types_)
-    # dff = find_df(df, 'degree', degree_)
-    # dff = find_df(df, 'experience', experience_)
-    # dff = find_df(df, 'gender', gender_)
-  elif types_ != []:
-    dff = find_df(df, 'types', types_)
-    # dff = find_df(df, 'degree', degree_)
-    # dff = find_df(df, 'experience', experience_)
-    # dff = find_df(df, 'gender', gender_)
-  elif location_ != []:
-    dff = find_df(df, 'working_location', location_)
-    # dff = find_df(df, 'degree', degree_)
-    # dff = find_df(df, 'experience', experience_)
-    # dff = find_df(df, 'gender', gender_)
-  else: 
+def update_data(search_, location_):
+    # search trả về value
+    # if location_ != [] and types_ != []:
+    #   dff = find_df(df, 'working_location', location_)
+    #   dff = find_df(df, 'types', types_)
+    #   # dff = find_df(df, 'degree', degree_)
+    #   # dff = find_df(df, 'experience', experience_)
+    #   # dff = find_df(df, 'gender', gender_)
+    # elif types_ != []:
+    #   dff = find_df(df, 'types', types_)
+      # dff = find_df(df, 'degree', degree_)
+      # dff = find_df(df, 'experience', experience_)
+      # dff = find_df(df, 'gender', gender_)
     dff = df
-    # dff = find_df(df, 'degree', degree_)
-    # dff = find_df(df, 'experience', experience_)
-    # dff = find_df(df, 'gender', gender_)
-  data = dff.to_dict('records')
-  tooltip_data=[
-      {
-          column: {'value': str(value), 'type': 'markdown'}
-          for column, value in row.items()
-      } for row in dff.to_dict('records')
-  ]
-  return data, tooltip_data
+    if search_ != '':
+      dff = searchItems(dff, search_)
+    if location_ != []:
+      dff = find_df(dff, 'working_location', location_)
+      # dff = find_df(df, 'degree', degree_)
+      # dff = find_df(df, 'experience', experience_)
+      # dff = find_df(df, 'gender', gender_)
+    data = dff.to_dict('records')
+    tooltip_data=[
+        {
+            column: {'value': str(value), 'type': 'markdown'}
+            for column, value in row.items()
+        } for row in dff.to_dict('records')
+    ]
+    return data, tooltip_data
 
 
 
