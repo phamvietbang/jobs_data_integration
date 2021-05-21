@@ -37,8 +37,8 @@ def index_documents(documents, index):
             print(f'Indexed {i} documents', end='\r')
     return index
 
-def load_documents():
-    df0 = pd.read_json('job_news.json')
+def load_documents(df0):
+    # df0 = pd.read_json('job_news.json')
     doc_id = 0
     for title in df0['title'].tolist():
         if title:
@@ -53,7 +53,7 @@ def find_df(d, label, data):
     return dff
 #Hàm lọc theo search:
 def searchItems(df, data):
-    index = index_documents(load_documents(), Index())   
+    index = index_documents(load_documents(df), Index())   
     # print(f'Index contains {len(index.documents)} documents')
     search_result = index.search(data, search_type='AND', rank=True)
     dff = df.iloc[search_result]
@@ -374,13 +374,14 @@ def update_data(search_, location_):
       # dff = find_df(df, 'experience', experience_)
       # dff = find_df(df, 'gender', gender_)
     dff = df
-    if search_ != '':
-      dff = searchItems(dff, search_)
+    
     if location_ != []:
       dff = find_df(dff, 'working_location', location_)
       # dff = find_df(df, 'degree', degree_)
       # dff = find_df(df, 'experience', experience_)
       # dff = find_df(df, 'gender', gender_)
+    if search_ != '':
+      dff = searchItems(dff, search_)
     data = dff.to_dict('records')
     tooltip_data=[
         {
