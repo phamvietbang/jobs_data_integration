@@ -2,23 +2,79 @@ import dash
 import dash_table
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output,  State
 import plotly.graph_objs as go
 import numpy as np
 import pandas as pd
-#Hàm lọc theo giá trị cột
-def find_df(d, label, data):
-  dff = d[d[label] == data[0]]
-  for i in range(len(data)-1):
-    dff = pd.concat([dff, d[d[label] == data[i+1]]])
-  return dff
-#Hàm lọc theo search:
-# def search(df, data):
+from timing import timing
+from index import Index
+import pandas as pd
+from collections import Counter
+from dataclasses import dataclass
+from analysis import analyze
 
-df = pd.read_json('./job_news.json')
-df = df.drop('_id', 1)
-df = df.drop('crawled_time', 1)
-dff = df
+@dataclass
+class JobSumary:
+    ID: int
+    title: str
+
+    @property
+    def fulltext(self):
+        return ' '.join([self.title])
+
+    def analyze(self):
+        self.term_frequencies = Counter(analyze(self.fulltext))
+
+    def term_frequency(self, term):
+        return self.term_frequencies.get(term, 0)
+
+@timing
+def index_documents(documents, index):
+    for i, document in enumerate(documents):
+        index.index_document(document)
+        if i % 5000 == 0:
+            print(f'Indexed {i} documents', end='\r')
+    return index
+
+def load_documents(df0):
+    # df0 = pd.read_json('job_news.json')
+    doc_id = 0
+    for title in df0['title'].tolist():
+        if title:
+            yield JobSumary(ID=doc_id, title=title)
+            doc_id += 1
+
+#Hàm lọc theo giá trị cột Work Location
+def findWorkLocation(d, label, data):
+    dff = d[d[label].str.contains(data[0])]
+    for i in range(len(data)-1):
+      dff = pd.concat([dff, d[d[label].str.contains(data[i+1])]])
+    return dff
+#Hàm lọc theo giá trị cột types
+def findTypes(d, label, data):
+    k=[]
+    for j in range(len(data)):
+      for i in d.index:
+          if data[j] in d[label][i] and i not in k: k.append(i)
+    if k!=[]: dff = df.iloc[k]
+    else: dff = d
+    return dff
+#Hàm lọc theo search:
+def searchItems(df, index, data):       
+    # print(f'Index contains {len(index.documents)} documents')
+    search_result = index.search(data, search_type='AND', rank=True)
+    dff = df.iloc[search_result]
+    return dff
+
+df = pd.read_json('./alljob.json')
+# df = df.drop('_id', 1)
+
+with open('./list_types.txt', mode='r', encoding='utf-8') as f:
+  dtype = f.read().split('\n')
+with open('./list_degree.txt', mode='r', encoding='utf-8') as f:
+  ddegree = f.read().split('\n')
+index = index_documents(load_documents(df), Index())
+df1 = df.head(7000)
 # page layout
 app = dash.Dash(external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css'])
 
@@ -26,8 +82,9 @@ app.layout = html.Div([
     html.Div(children=[
             html.Div(children=[
               # chưa làm được hàm search
-              dcc.Input(id='search', value='Hà Nội', type='text'),
-              html.Button('search', id='submit-val', n_clicks=0),
+              html.Label('Search'),
+              dcc.Input(id='search', value='Kinh doanh Hà Nội', type='text'),
+              html.Button(id='submit-button-state', n_clicks=0, children='Submit'),
               html.Label('Working_location'),
               dcc.Dropdown(
                   id='location',
@@ -106,132 +163,51 @@ app.layout = html.Div([
               dcc.Dropdown(
                   id='types',
                   # Nên sử dụng dạng sau:
-                  # options=[{'label': i, 'value': i} for i in available_indicators],
-                  options=[
-                      {'label': 'Bán hàng', 'value': 'Bán hàng'},
-                      {'label': 'Quản trị kinh doanh', 'value': 'Quản trị kinh doanh'},
-                      {'label': 'Khách sạn - Nhà hàng', 'value': 'Khách sạn - Nhà hàng'},
-                      {'label': 'Marketing - PR', 'value': 'Marketing - PR'},
-                      {'label': 'Xây dựng', 'value': 'Xây dựng'},
-                      {'label': 'Kế toán - Kiểm toán', 'value': 'Kế toán - Kiểm toán'},
-                      {'label': 'Nhân sự', 'value': 'Nhân sự'},
-                      {'label': 'Hành chính - văn phòng', 'value': 'Hành chính - văn phòng'},
-                      {'label': 'KD bất động sản', 'value': 'KD bất động sản'},
-                      {'label': 'An ninh - Bảo vệ', 'value': 'An ninh - Bảo vệ'},
-                      {'label': 'Báo chí - Truyền hình', 'value': 'Báo chí - Truyền hình'},
-                      {'label': 'Bảo hiểm', 'value': 'Bảo hiểm'},
-                      {'label': 'Biên - Phiên dịch', 'value': 'Biên - Phiên dịch'},
-                      {'label': 'Bưu chính', 'value': 'Bưu chính'},
-                      {'label': 'Chứng khoán - vàng', 'value': 'Chứng khoán - vàng'},
-                      {'label': 'Cơ khí - Chế tạo', 'value': 'Cơ khí - Chế tạo'},
-                      {'label': 'Công nghệ cao', 'value': 'Công nghệ cao'},
-                      {'label': 'Công nghiệp', 'value': 'Công nghiệp'},
-                      {'label': 'Dầu khí - Hóa chất', 'value': 'Dầu khí - Hóa chất'},
-                      {'label': 'Dệt may - Da giày', 'value': 'Dệt may - Da giày'},
-                      {'label': 'Dịch vụ', 'value': 'Dịch vụ'},
-                      {'label': 'Du lịch', 'value': 'Du lịch'},
-                      {'label': 'Điện tử viễn thông', 'value': 'Điện tử viễn thông'},
-                      {'label': 'Điện - Điện tử - Điện lạnh', 'value': 'Điện - Điện tử - Điện lạnh'},
-                      {'label': 'Game', 'value': 'Game'},
-                      {'label': 'Giáo dục - Đào tạo', 'value': 'Giáo dục - Đào tạo'},
-                      {'label': 'Hàng gia dụng', 'value': 'Hàng gia dụng'},
-                      {'label': 'Hàng hải', 'value': 'Hàng hải'},
-                      {'label': 'Hàng không', 'value': 'Hàng không'},
-                      {'label': 'Hóa hoc - Sinh học', 'value': 'Hóa hoc - Sinh học'},
-                      {'label': 'Hoạch định dự án', 'value': 'Hoạch định dự án'},
-                      {'label': 'In ấn - Xuất bản', 'value': 'In ấn - Xuất bản'},
-                      {'label': 'IT phần cứng/mạng', 'value': 'IT phần cứng/mạng'},
-                      {'label': 'IT phần mềm', 'value': 'IT phần mềm'},
-                      {'label': 'Kho vận - Vật tư', 'value': 'Kho vận - Vật tư'},
-                      {'label': 'Kiến trúc - TK nội thất', 'value': 'Kiến trúc - TK nội thất'},
-                      {'label': 'Kỹ thuật', 'value': 'Kỹ thuật'},
-                      {'label': 'Kỹ thuật ứng dụng', 'value': 'Kỹ thuật ứng dụng'},
-                      {'label': 'Làm bán thời gian', 'value': 'Làm bán thời gian'},
-                      {'label': 'Lao động phổ thông', 'value': 'Lao động phổ thông'},
-                      {'label': 'Mỹ phẩm - Trang sức', 'value': 'Mỹ phẩm - Trang sức'},
-                      {'label': 'Ngân hàng', 'value': 'Ngân hàng'},
-                      {'label': 'Ngành nghề khác', 'value': 'Ngành nghề khác'},
-                      {'label': 'Nghệ thuật - Điện ảnh', 'value': 'Nghệ thuật - Điện ảnh'},
-                      {'label': 'Ngoại thương - Xuất nhập', 'value': 'Ngoại thương - Xuất nhập'},
-                      {'label': 'Người giúp việc', 'value': 'Người giúp việc'},
-                      {'label': 'Nhân viên kinh doanh', 'value': 'Nhân viên kinh doanh'},
-                      {'label': 'Nông - Lâm - Ngư nghiệp', 'value': 'Nông - Lâm - Ngư nghiệp'},
-                      {'label': 'NV trông quán Internet', 'value': 'NV trông quán Internet'},
-                      {'label': 'Ô tô - Xe máy', 'value': 'Ô tô - Xe máy'},
-                      {'label': 'Pháp lý - Luật', 'value': 'Pháp lý - Luật'},
-                      {'label': 'Promotion Girl', 'value': 'Promotion Girl'},
-                      {'label': 'Quan hệ đối ngoại', 'value': 'Quan hệ đối ngoại'},
-                      {'label': 'Sinh viên làm thêm', 'value': 'Sinh viên làm thêm'},
-                      {'label': 'Tài chính đầu tư', 'value': 'Tài chính đầu tư'},
-                      {'label': 'Thiết kế đồ họa', 'value': 'Thiết kế đồ họa'},
-                      {'label': 'Thiết kế - Mỹ thuật', 'value': 'Thiết kế - Mỹ thuật'},
-                      {'label': 'Thời trang', 'value': 'Thời trang'},
-                      {'label': 'Thủ công mỹ nghệ', 'value': 'Thủ công mỹ nghệ'},
-                      {'label': 'Thư ký - Trợ lý', 'value': 'Thư ký - Trợ lý'},
-                      {'label': 'Thực phẩm - Đồ uống', 'value': 'Thực phẩm - Đồ uống'},
-                      {'label': 'Thực tập', 'value': 'Thực tập'},
-                      {'label': 'Thương mại điện tử', 'value': 'Thương mại điện tử'},
-                      {'label': 'Tiếp thị - Quảng cáo', 'value': 'Tiếp thị - Quảng cáo'},
-                      {'label': 'Tổ chức sự kiện - Quà tặng', 'value': 'Tổ chức sự kiện - Quà tặng'},
-                      {'label': 'Tư vấn', 'value': 'Tư vấn'},
-                      {'label': 'Vận tải lái xe', 'value': 'Vận tải lái xe'},
-                      {'label': 'Y tế - Dược', 'value': 'Y tế - Dược'},
-                  ],
-                  value = "Y tế - Dược",
+                  options=[{'label': i, 'value': i} for i in dtype],
+                  value = "Chăm Sóc Khách Hàng",
                   multi=True
               ),
               
           ], style={'display': 'inline-block', 'vertical-align': 'top', 'margin-left': '5%', 'margin-top': '3vw'}),
           html.Div(children=[
             html.Label('Salary'),
-            dcc.RadioItems(
-              # chưa đưa ra được option chính xác về lương
-                options=[
-                    {'label': '<1 triệu', 'value': '1'},
-                    {'label': u'1-10 triệu', 'value': '2'},
-                    {'label': '10-50 triệu', 'value': '3'},
-                    {'label': '>50 triệu', 'value': '4'},
-                    {'label': 'thương lượng', 'value': '5'}
-                ],
-                value='2',
-                labelStyle={'display': 'block'}
+            'From ',
+            dcc.Input(
+                id="s1",
+                value=1,
+                type="number"
+            ),
+            ' to ',
+            dcc.Input(
+                id="s2",
+                value=5,
+                type="number",
+                size='15'
+            ),
+            ' Triệu VNĐ',
+            html.Label('Experience'),
+            'From ',
+            dcc.Input(
+                id="e1",
+                value=1,
+                type="number"
+            ),
+            ' to ',
+            dcc.Input(
+                id="e2",
+                value=5,
+                type="number",
+            ),
+            ' Years',
+            html.Label('Degree'),
+            dcc.Dropdown(
+                id='degree', 
+                options=[{'label': i, 'value': i} for i in ddegree],
+                value='Không yêu cầu',
+                multi = True
             ),
 
         ], style={'display': 'inline-block', 'vertical-align': 'top', 'margin-left': '10%', 'margin-top': '3vw'}),
-          # third column of first row
-          html.Div(children=[
-              html.Label('Degree'),
-              dcc.RadioItems(
-                # chưa đưa ra được chính xác option về bằng cấp
-                  id='degree', 
-                  options=[
-                      {'label': 'Không yêu cầu', 'value': 'Không yêu cầu'},
-                      {'label': u'Trung học', 'value': 'Trung học'},
-                      {'label': 'Trung cấp', 'value': 'Trung cấp'},
-                      {'label': 'Cao đẳng', 'value': 'Cao đẳng'},
-                      {'label': 'Đại học', 'value': 'Đại học'},
-                      {'label': 'Trên đại học', 'value': 'Trên đại học'}
-
-                  ],
-                  value='Trung học',
-                  labelStyle={'display': 'block'}
-              ),
-
-          ], style={'display': 'inline-block', 'vertical-align': 'top', 'margin-left': '5%', 'margin-top': '3vw'}),
-          html.Div(children=[
-              html.Label('Experience'),
-              dcc.RadioItems(
-                id='experience',
-                  options=[
-                      {'label': u'dưới 1 năm', 'value': 'dưới 1 năm'},
-                      {'label': '1-5 năm', 'value': '1-5 năm'},
-                      {'label': 'trên 5 năm', 'value': 'trên 5 năm'}
-                  ],
-                  value='dưới 1 năm',
-                  labelStyle={'display': 'block'}
-              ),
-
-          ], style={'display': 'inline-block', 'vertical-align': 'top', 'margin-left': '5%', 'margin-top': '3vw'}),
           html.Div(children=[
               html.Label('Gender'),
               dcc.RadioItems(
@@ -256,9 +232,9 @@ app.layout = html.Div([
           style_data={
             'whiteSpace': 'normal',
           },
-          data=dff.to_dict('records'),
+          data=df1.to_dict('records'),
           columns=[
-              {"name": i, "id": i,} for i in dff.columns
+              {"name": i, "id": i,} for i in df1.columns
           ],
           css=[{
               'selector': '.dash-spreadsheet td div',
@@ -273,7 +249,7 @@ app.layout = html.Div([
               {
                   column: {'value': str(value), 'type': 'markdown'}
                   for column, value in row.items()
-              } for row in dff.to_dict('records')
+              } for row in df1.to_dict('records')
           ],
           tooltip_duration=None,
 
@@ -283,17 +259,13 @@ app.layout = html.Div([
             'textOverflow': 'ellipsis',
             'whiteSpace': 'normal',
             'minWidth': '80px', 'width': '80px', 'maxWidth': '80px',
-            }, # left align text in columns for readability
-          # style_table={'height': 1000},
-          
+            }, 
           editable=True,
           filter_action="native",
           sort_action="native",
           sort_mode="multi",
           column_selectable="single",
           row_selectable="multi",
-#           selected_columns=[],
-#           selected_rows=[],
           page_action="native",
           page_current= 0,
           page_size= 10,
@@ -306,49 +278,48 @@ app.layout = html.Div([
 @app.callback(
     Output(component_id='datatable-interactivity', component_property='data'),
     Output(component_id='datatable-interactivity', component_property='tooltip_data'),
-    # Input(component_id='search', component_property='value'),
     Input(component_id='location', component_property='value'),
     Input(component_id='types', component_property='value'),
-    # Input(component_id='degree', component_property='value'),
-    # Input(component_id='experience', component_property='value'),
-    # Input(component_id='gender', component_property='value'),
+    Input(component_id='degree', component_property='value'),
+    Input(component_id='gender', component_property='value'),
+    Input(component_id='s1', component_property='value'),
+    Input(component_id='s2', component_property='value'),
+    Input(component_id='e1', component_property='value'),
+    Input(component_id='e2', component_property='value'),
+    Input('submit-button-state', 'n_clicks'),
+    State('search', 'value'),
 )
 
 
 # def update_data(search_, location_, types_, degree_, experience_, gender_):
-def update_data(, location_, types_):
-  # search trả về value
-  # if search_!='':
-  # Viết hàm search tìm các dữ liệu theo search rồi gán cho dataframe dff
-  if location_ != [] and types_ != []:
-    dff = find_df(df, 'working_location', location_)
-    dff = find_df(df, 'types', types_)
-    # dff = find_df(df, 'degree', degree_)
-    # dff = find_df(df, 'experience', experience_)
-    # dff = find_df(df, 'gender', gender_)
-  elif types_ != []:
-    dff = find_df(df, 'types', types_)
-    # dff = find_df(df, 'degree', degree_)
-    # dff = find_df(df, 'experience', experience_)
-    # dff = find_df(df, 'gender', gender_)
-  elif location_ != []:
-    dff = find_df(df, 'working_location', location_)
-    # dff = find_df(df, 'degree', degree_)
-    # dff = find_df(df, 'experience', experience_)
-    # dff = find_df(df, 'gender', gender_)
-  else: 
+def update_data(location_,types_,degree_, gender_,s1,s2,e1,e2,n_click,search_):
     dff = df
-    # dff = find_df(df, 'degree', degree_)
-    # dff = find_df(df, 'experience', experience_)
-    # dff = find_df(df, 'gender', gender_)
-  data = dff.to_dict('records')
-  tooltip_data=[
-      {
-          column: {'value': str(value), 'type': 'markdown'}
-          for column, value in row.items()
-      } for row in dff.to_dict('records')
-  ]
-  return data, tooltip_data
+    if search_ != '':
+      dff = searchItems(dff, index, search_)
+    # if s1==s2==0: dff = dff[dff['salary'] == 'Không yêu cầu']
+    # elif s1==s2 and s1!=0: dff = dff[dff['salary'] == str(s1)+' triệu'] 
+    # else: dff = dff = dff[dff['salary'] ==  str(s1)+' - '+str(s2)+' triệu']
+    # if e1==e2==0: dff = dff[dff['experience'] == 'Không yêu cầu']
+    # elif e1==e2 and e1!=0: dff = dff[dff['experience'] == str(s1)+' năm']
+    # else: dff = dff[dff['experience'] == str(s1)+' - '+str(s2)+' năm']
+    if gender_ != '':
+      dff = dff[dff['gender'] == gender_]
+    if degree_ != '':
+      dff = findTypes(dff, 'degree', degree_)
+    if location_ != []:
+      dff = findWorkLocation(dff, 'working_location', location_)
+    if types_ != []:
+      dff = findTypes(dff, 'types', types_)
+      
+    dff = dff.head(7000)
+    data = dff.to_dict('records')
+    tooltip_data=[
+        {
+            column: {'value': str(value), 'type': 'markdown'}
+            for column, value in row.items()
+        } for row in dff.to_dict('records')
+    ]
+    return data, tooltip_data
 
 
 

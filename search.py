@@ -38,9 +38,9 @@ def load_documents():
             doc_id += 1
 
 
-index = index_documents(load_documents(), Index())
-    
-print(f'Index contains {len(index.documents)} documents')
-search_result = index.search('Kinh doanh Hà Nội', search_type='AND', rank=True)
-print(len(search_result))
-print(search_result)
+# index = index_documents(load_documents(), Index())
+# df0 = pd.read_json('job_news.json')   
+# print(f'Index contains {len(index.documents)} documents')
+# search_result = index.search('Kinh doanh Hà Nội', search_type='AND', rank=True)
+# print(len(search_result))
+# print(df0.iloc[search_result])
