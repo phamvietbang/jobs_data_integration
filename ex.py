@@ -2,7 +2,7 @@ import dash
 import dash_table
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output,  State
 import plotly.graph_objs as go
 import numpy as np
 import pandas as pd
@@ -84,6 +84,7 @@ app.layout = html.Div([
               # chưa làm được hàm search
               html.Label('Search'),
               dcc.Input(id='search', value='Kinh doanh Hà Nội', type='text'),
+              html.Button(id='submit-button-state', n_clicks=0, children='Submit'),
               html.Label('Working_location'),
               dcc.Dropdown(
                   id='location',
@@ -170,46 +171,43 @@ app.layout = html.Div([
           ], style={'display': 'inline-block', 'vertical-align': 'top', 'margin-left': '5%', 'margin-top': '3vw'}),
           html.Div(children=[
             html.Label('Salary'),
-            dcc.RadioItems(
-              # chưa đưa ra được option chính xác về lương
-                options=[
-                    {'label': '<1 triệu', 'value': '1'},
-                    {'label': u'1-10 triệu', 'value': '2'},
-                    {'label': '10-50 triệu', 'value': '3'},
-                    {'label': '>50 triệu', 'value': '4'},
-                    {'label': 'thương lượng', 'value': '5'}
-                ],
-                value='2',
-                labelStyle={'display': 'block'}
+            'From ',
+            dcc.Input(
+                id="s1",
+                value=1,
+                type="number"
+            ),
+            ' to ',
+            dcc.Input(
+                id="s2",
+                value=5,
+                type="number",
+                size='15'
+            ),
+            ' Triệu VNĐ',
+            html.Label('Experience'),
+            'From ',
+            dcc.Input(
+                id="e1",
+                value=1,
+                type="number"
+            ),
+            ' to ',
+            dcc.Input(
+                id="e2",
+                value=5,
+                type="number",
+            ),
+            ' Years',
+            html.Label('Degree'),
+            dcc.Dropdown(
+                id='degree', 
+                options=[{'label': i, 'value': i} for i in ddegree],
+                value='Không yêu cầu',
+                multi = True
             ),
 
         ], style={'display': 'inline-block', 'vertical-align': 'top', 'margin-left': '10%', 'margin-top': '3vw'}),
-          # third column of first row
-          html.Div(children=[
-              html.Label('Degree'),
-              dcc.RadioItems(
-                # chưa đưa ra được chính xác option về bằng cấp
-                  id='degree', 
-                  options=[{'label': i, 'value': i} for i in ddegree],
-                  value='Không yêu cầu',
-                  labelStyle={'display': 'block'}
-              ),
-
-          ], style={'display': 'inline-block', 'vertical-align': 'top', 'margin-left': '5%', 'margin-top': '3vw'}),
-          html.Div(children=[
-              html.Label('Experience'),
-              dcc.RadioItems(
-                id='experience',
-                  options=[
-                      {'label': u'dưới 1 năm', 'value': 'dưới 1 năm'},
-                      {'label': '1-5 năm', 'value': '1-5 năm'},
-                      {'label': 'trên 5 năm', 'value': 'trên 5 năm'}
-                  ],
-                  value='dưới 1 năm',
-                  labelStyle={'display': 'block'}
-              ),
-
-          ], style={'display': 'inline-block', 'vertical-align': 'top', 'margin-left': '5%', 'margin-top': '3vw'}),
           html.Div(children=[
               html.Label('Gender'),
               dcc.RadioItems(
@@ -280,26 +278,39 @@ app.layout = html.Div([
 @app.callback(
     Output(component_id='datatable-interactivity', component_property='data'),
     Output(component_id='datatable-interactivity', component_property='tooltip_data'),
-    Input(component_id='search', component_property='value'),
     Input(component_id='location', component_property='value'),
     Input(component_id='types', component_property='value'),
     Input(component_id='degree', component_property='value'),
-    # Input(component_id='experience', component_property='value'),
     Input(component_id='gender', component_property='value'),
+    Input(component_id='s1', component_property='value'),
+    Input(component_id='s2', component_property='value'),
+    Input(component_id='e1', component_property='value'),
+    Input(component_id='e2', component_property='value'),
+    Input('submit-button-state', 'n_clicks'),
+    State('search', 'value'),
 )
 
 
 # def update_data(search_, location_, types_, degree_, experience_, gender_):
-def update_data(search_, location_,types_,degree_, gender_):
+def update_data(location_,types_,degree_, gender_,s1,s2,e1,e2,n_click,search_):
     dff = df
     if search_ != '':
       dff = searchItems(dff, index, search_)
+    # if s1==s2==0: dff = dff[dff['salary'] == 'Không yêu cầu']
+    # elif s1==s2 and s1!=0: dff = dff[dff['salary'] == str(s1)+' triệu'] 
+    # else: dff = dff = dff[dff['salary'] ==  str(s1)+' - '+str(s2)+' triệu']
+    # if e1==e2==0: dff = dff[dff['experience'] == 'Không yêu cầu']
+    # elif e1==e2 and e1!=0: dff = dff[dff['experience'] == str(s1)+' năm']
+    # else: dff = dff[dff['experience'] == str(s1)+' - '+str(s2)+' năm']
+    if gender_ != '':
+      dff = dff[dff['gender'] == gender_]
+    if degree_ != '':
+      dff = findTypes(dff, 'degree', degree_)
     if location_ != []:
       dff = findWorkLocation(dff, 'working_location', location_)
     if types_ != []:
       dff = findTypes(dff, 'types', types_)
-    dff = dff[dff['gender'] == gender_]
-    dff = dff[dff['degree'] == degree_]
+      
     dff = dff.head(7000)
     data = dff.to_dict('records')
     tooltip_data=[
