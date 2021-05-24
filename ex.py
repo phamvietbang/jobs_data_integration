@@ -14,41 +14,8 @@ from dataclasses import dataclass
 from analysis import analyze
 from SearchEx import Experience_management
 from SearchSa import SalaryManagement
-
-
-@dataclass
-class JobSumary:
-    ID: int
-    title: str
-
-    @property
-    def fulltext(self):
-        return ' '.join([self.title])
-
-    def analyze(self):
-        self.term_frequencies = Counter(analyze(self.fulltext))
-
-    def term_frequency(self, term):
-        return self.term_frequencies.get(term, 0)
-
-
-@timing
-def index_documents(documents, index):
-    for i, document in enumerate(documents):
-        index.index_document(document)
-        if i % 5000 == 0:
-            print(f'Indexed {i} documents', end='\r')
-    return index
-
-
-def load_documents(df0):
-    # df0 = pd.read_json('job_news.json')
-    doc_id = 0
-    for title in df0['title'].tolist():
-        if title:
-            yield JobSumary(ID=doc_id, title=title)
-            doc_id += 1
-
+import search
+import read_data
 
 # Hàm lọc theo giá trị cột Work Location
 def findWorkLocation(d, label, data):
@@ -79,14 +46,14 @@ def searchItems(df, index, data):
     return dff
 
 
-df = pd.read_json('./alljob.json')
-# df = df.drop('_id', 1)
+
+df = read_data.read_mongo(db='local', collection='alljob')
 
 with open('./list_types.txt', mode='r', encoding='utf-8') as f:
     dtype = f.read().split('\n')
 with open('./list_degree.txt', mode='r', encoding='utf-8') as f:
     ddegree = f.read().split('\n')
-index = index_documents(load_documents(df), Index())
+index = search.index_documents(search.load_documents(df), Index())
 df1 = df.head(7000)
 # page layout
 app = dash.Dash(external_stylesheets=['https://codepen.io/chriddyp/pen/bWLwgP.css'])

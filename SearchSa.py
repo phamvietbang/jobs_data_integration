@@ -75,7 +75,7 @@ class SalaryManagement(object):
 		:param num_records: số lượng bản ghi muốn lấy
 		:return: valid_records: list các bản ghi thỏa mãn
 		"""
-		df = pd.read_json(self.data)
+		df = self.data
 		salary_list = df['salary']
 		valid_records = []
 		for i, salary_str in enumerate(salary_list):

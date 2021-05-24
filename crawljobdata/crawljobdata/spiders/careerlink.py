@@ -1,5 +1,12 @@
 import scrapy
 import re
+from pymongo import MongoClient
+
+myclient = MongoClient("mongodb://localhost:27017/")
+mydb = myclient["crawljob"]
+mycol = mydb["careerlink"]
+with open('link.txt', mode='r') as f:
+    links = f.read().split('\n')
 class CareerLink(scrapy.Spider):
     name = 'careerlink'
     allow_domains = ['careerlink.vn']
@@ -13,8 +20,9 @@ class CareerLink(scrapy.Spider):
     def parse(self, response):
         urls = response.xpath('//a[contains(@class, "job-link clickable-outside")]/@href').getall()
         for url in urls:
-            url = response.urljoin(url)
-            yield scrapy.Request(url=url, callback=self.parse_details)
+            if url not in links:
+                url = response.urljoin(url)
+                yield scrapy.Request(url=url, callback=self.parse_details)
         next_page_url = response.xpath('//a[contains(@rel, "next")]/@href').get()
         if next_page_url:
             next_page_url = response.urljoin(next_page_url)
@@ -70,5 +78,5 @@ class CareerLink(scrapy.Spider):
         
         m = response.xpath('//div[contains(@itemprop, "skill")]/p/text()').get()
         data['skill'] = re.sub('<.*?>', '', m)
-
+        mycol.insert_one(data)
         yield data

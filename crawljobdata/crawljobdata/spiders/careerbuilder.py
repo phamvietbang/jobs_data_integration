@@ -1,6 +1,14 @@
 import scrapy
 # from ..items import CrawldataItem
 import re
+from pymongo import MongoClient
+
+myclient = MongoClient("mongodb://localhost:27017/")
+mydb = myclient["crawljob"]
+mycol = mydb["careerbuilder"]
+with open('link.txt', mode='r') as f:
+    links = f.read().split('\n')
+
 class CareerBuilder(scrapy.Spider):
     name = 'careerbuilder'
     allow_domains = ['careerbuilder.vn']
@@ -11,8 +19,9 @@ class CareerBuilder(scrapy.Spider):
     def parse(self, response):
         urls = response.xpath('//a[contains(@class, "job_link")]/@href').getall()
         for url in urls:
-            url = response.urljoin(url)
-            yield scrapy.Request(url=url, callback=self.parse_details)
+            if url not in links:
+                url = response.urljoin(url)
+                yield scrapy.Request(url=url, callback=self.parse_details)
         next_page_url = response.xpath('//li[contains(@class, "next-page")]/a/@href').get()
         if next_page_url:
             next_page_url = response.urljoin(next_page_url)
@@ -79,5 +88,5 @@ class CareerBuilder(scrapy.Spider):
             m = [i.strip() for i in m]
             data['jobtags/skill'] = m
         else: data['jobtags/skill'] = ''
-
+        mycol.insert_one(data)
         yield data

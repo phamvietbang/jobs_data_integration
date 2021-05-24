@@ -31,8 +31,8 @@ def index_documents(documents, index):
             print(f'Indexed {i} documents', end='\r')
     return index
 
-def load_documents():
-    df0 = pd.read_json('job_news.json')
+def load_documents(df):
+    df0 = df
     for id in df0.index:
         title = "" if pd.isnull(df0.loc[id, 'title']) else df0.loc[id, 'title']
         working_location = "" if pd.isnull(df0.loc[id, 'working_location']) else df0.loc[id, 'working_location']
@@ -42,13 +42,3 @@ def load_documents():
         if title:
             yield JobSumary(ID=id, title=title, working_location=working_location,\
                 company_name=company_name, types=types)
-
-index = index_documents(load_documents(), Index())
-df0 = pd.read_json('job_news.json')   
-print(f'Index contains {len(index.documents)} documents')
-search_text = "Nhân viên kinh doanh FPT Hà Nội"
-search_result = index.search(search_text, search_type='AND', rank=True)
-print(len(search_result))
-print("Seach text: ", search_text)
-print(df0.loc[search_result[0]])
-# print(df0.iloc[search_result])

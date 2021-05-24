@@ -71,7 +71,7 @@ DOWNLOADER_MIDDLEWARES = {
     'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
     'random_useragent.RandomUserAgentMiddleware': 400
 }
-SER_AGENT_LIST = "C:/Users/super/OneDrive/Desktop/data_integration/user-agent.txt"
+SER_AGENT_LIST = "./user-agent.txt"
 # DOWNLOADER_MIDDLEWARES = {
 #     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
 #     'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
@@ -112,9 +112,9 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-ITEM_PIPELINES = {
-   'crawljobdata.pipelines.CrawljobdataPipeline': 300,
-}
+# ITEM_PIPELINES = {
+#    'crawljobdata.pipelines.CrawljobdataPipeline': 300,
+# }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

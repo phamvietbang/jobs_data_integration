@@ -8,7 +8,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import re
 from selenium import webdriver
+from pymongo import MongoClient
 
+myclient = MongoClient("mongodb://localhost:27017/")
+mydb = myclient["crawljob"]
+mycol = mydb["vietnamworks"]
+with open('link.txt', mode='r') as f:
+    links = f.read().split('\n')
 
 def init_browser(type):
     if type == "chrome":
@@ -58,8 +64,9 @@ class vietnamworks(scrapy.Spider):
             element = self.brow.find_elements_by_xpath('//a[contains(text(), ">")]')
             urls = self.brow.find_elements_by_xpath('//a[contains(@class, "job-title")]')
             for url in urls:
-                url = response.urljoin(url.get_attribute('href'))
-                yield scrapy.Request(url=url, cookies=self.brow.get_cookies(), callback=self.parse_details)
+                if url not in links:
+                    url = response.urljoin(url.get_attribute('href'))
+                    yield scrapy.Request(url=url, cookies=self.brow.get_cookies(), callback=self.parse_details)
             try:
                 element[0].click()
             except:
@@ -125,4 +132,5 @@ class vietnamworks(scrapy.Spider):
             data['Yêu Cầu Công Việc'] = ''
         data['Địa điểm làm việc'] = response.xpath(
             '//div[contains(@class,"location-name col-xs-11")]/text()').get().strip()
+        mycol.insert_one(data)
         yield data
