@@ -1,11 +1,8 @@
 import re
 import string
 from pyvi import ViTokenizer
-# top 25 most common words in English and "wikipedia":
-# https://en.wikipedia.org/wiki/Most_common_words_in_English
-# STOPWORDS = set(['the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have',
-#                  'i', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you',
-#                  'do', 'at', 'this', 'but', 'his', 'by', 'from', 'wikipedia'])
+
+STOPWORDS = set(['bị','bởi','cả','các','cái','cần','càng','chỉ','chiếc','cho','chứ','chưa','chuyện','có','có_thể','cứ','của','cùng','cũng','đã','đang','đây','để','đến_nỗi','đều','điều','do','đó','được','dưới','gì','khi','không','là','lại','lên','lúc','mà','mỗi','một_cách','này','nên','nếu','ngay','nhiều','như','nhưng','những','nơi','nữa','phải','qua','ra','rằng','rằng','rất','rất','rồi','sau','sẽ','so','sự','tại','theo','thì','trên','trước','từ','từng','và','vẫn','vào','vậy','vì','việc','với','vừa'])
 PUNCTUATION = re.compile('[%s]' % re.escape(string.punctuation))
 
 def tokenize(text):
@@ -18,13 +15,13 @@ def lowercase_filter(tokens):
 def punctuation_filter(tokens):
     return [PUNCTUATION.sub('', token) for token in tokens]
 
-# def stopword_filter(tokens):
-#     return [token for token in tokens if token not in STOPWORDS]
+def stopword_filter(tokens):
+    return [token for token in tokens if token not in STOPWORDS]
 
 def analyze(text):
     tokens = tokenize(text)
     tokens = lowercase_filter(tokens)
     tokens = punctuation_filter(tokens)
-    # tokens = stopword_filter(tokens)
+    tokens = stopword_filter(tokens)
 
     return [token for token in tokens if token]
