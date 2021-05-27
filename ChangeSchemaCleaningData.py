@@ -45,10 +45,9 @@ viectotnhat['company_link'] = ""
 
 jobsgo.columns = ['title', 'description', 'requirements', 'benefits', 
                   'salary', 'company_name', 'company_address', 
-                  'position', 'experience', 'degree', 'company_link',
+                  'position', 'experience', 'working_location', 'degree', 'company_link',
                   'news_link', 'deadline', 'types']
 jobsgo['source'] = "jobsgo.vn"
-jobsgo['working_location'] = ""
 jobsgo['gender'] = ""
 jobsgo['updated_date'] = ""
 jobsgo['crawled_time'] = ""
