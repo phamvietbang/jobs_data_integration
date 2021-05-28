@@ -47,7 +47,7 @@ def searchItems(df, index, data):
 
 
 
-df = read_data.read_mongo(db='local', collection='alljob')
+df = read_data.read_mongo(db='local', collection='alljob_final')
 
 with open('./list_types.txt', mode='r', encoding='utf-8') as f:
     dtype = f.read().split('\n')

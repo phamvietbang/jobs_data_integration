@@ -5,8 +5,7 @@ from datetime import datetime
 myclient = MongoClient("mongodb://localhost:27017/")
 mydb = myclient["crawljob"]
 mycol = mydb["job_news"]
-with open('link.txt', mode='r') as f:
-    links = f.read().split('\n')
+
 class TimViec365Spider(scrapy.Spider):
     name = "timviec365"
     source = "timviec365.vn"
@@ -16,9 +15,8 @@ class TimViec365Spider(scrapy.Spider):
     def parse(self, response):
         detail_pages = response.css('a.title_cate::attr(href)').getall()
         for i in range(len(detail_pages)):
-            if detail_page[i] not in links:
-                detail_page = response.urljoin(detail_pages[i])
-                yield scrapy.Request(detail_page, callback=self.parse_detail, dont_filter=False) # dont_filter=False means scrapy will not get duplicate links
+            detail_page = response.urljoin(detail_pages[i])
+            yield scrapy.Request(detail_page, callback=self.parse_detail, dont_filter=False) # dont_filter=False means scrapy will not get duplicate links
                 # yield scrapy.Request(author_page, callback=self.parse_author, \
                 #     meta={'quote_item': quote_item})
             # else:

@@ -1,232 +1,231 @@
 Không xác định
 Tư Vấn Bán Hàng
-Quan Hệ Khách Hàng
-Bán Lẻ/Cửa Hàng
-Phát Triển Thị Trường
-Bảo Hiểm
-Chăm Sóc Khách Hàng
-Bất Động Sản
 Bán Hàng Qua Điện Thoại (Telesale)
-Cơ Khí
-Hành chính Văn phòng
-Quản Lý Tín Dụng
+Chăm Sóc Khách Hàng
+Mỹ Phẩm
+Nghiên Cứu Thị Trường
+Phát Triển Thị Trường
+Quan Hệ Khách Hàng
+Toàn thời gian
+ Bán thời gian
 Đào Tạo Bán Hàng
+Quản Trị Nhân Sự (HR)
+Cơ Điện
+Bảo Trì - Sửa Chữa
+Cơ Khí
+Du Lịch
+Bất Động Sản
 Môi Giới Chứng Khoán
 Phân Tích Tài Chính
-PHP
-Tư Vấn Doanh Nghiệp (B2B)
+Đầu Tư Dự Án
 Nội Dung
 Social Marketing
 Truyền Thông/Báo Chí
-Đầu Tư Dự Án
-Tổng Đài Viên
-Toàn thời gian
- Bán thời gian
- Làm theo giờ
-Dược Phẩm
-Mỹ Phẩm
-Quản Trị Nhân Sự (HR)
-Du Lịch
-Cơ Điện
 Giám Sát Công Trình
-Lao Động Phổ Thông Khác
-Bảo Trì - Sửa Chữa
+Thiết Kế Nội Thất
+Thiết Kế 3D
+Thiết Kế Sản Phẩm
+Bảo Hiểm
+Bán Lẻ/Cửa Hàng
+Hành chính Văn phòng
+Quản Lý Tín Dụng
+PHP
+Tư Vấn Doanh Nghiệp (B2B)
+Dược Phẩm
 Tự Động Hóa
-CAD/CAM
+Lao Động Phổ Thông Khác
+Kế Toán Thuế
+Kế Toán Kho
+Kế Toán Tổng Hợp
+SEO
+Digital Marketing
+Nhập Liệu
+Giám Sát Dịch Vụ
+Bàn
+Điều Phối Viên
+Tổng Đài Viên
+Xử Lý Nợ
 Kiến Trúc
 Xây Dựng
+Quản Lý Dự Án
+Tuyển Sinh
+Thủy Hải Sản
 Thẩm Định Tín Dụng
 Tuyển Dụng (HR)
-iOS
-Android
-Backend
-Nghiên Cứu Thị Trường
-Môi Trường/Xử Lý Chất Thải
-Thi Công
-Kỹ Sư Bán Hàng (Sale Engineer)
-Kế Toán Tổng Hợp
-Kế Toán Quản Trị
-Lễ Tân (Receptionist)
-Y Tá/Điều Dưỡng
-FAST
-Misa
-Thu Ngân
-Điện Lạnh/Nhiệt Lạnh
-Triển Khai Phần Mềm
-SEO
+Kế Toán Sản Xuất
+Thu Mua
+Đào Tạo
+Giao Nhận Hàng
+Vận Hành Máy
+IT Support
+Giám Sát Bán Hàng
+Quản Trị Thương Hiệu (Branding)
+Offline Marketing (Báo/Đài/Truyền Hình)
 Java
 C/C++
-IT Support
 Quản Trị Hệ Thống
+Triển Khai Phần Mềm
 Kỹ Thuật Điện/Điện tử
-Quản Lý Sản Phẩm
-Thương Mại Quốc Tế
-Xuất Nhập Khẩu
 Thư Ký
 Bảo Hiểm Và Tiền Lương (C&B)
-Javascript
+Thương Mại Quốc Tế
+Xuất Nhập Khẩu
+Backend
 Full-stack
 Frontend (HTML/CSS)
 Cloud (AWS/Azure)
-Giám Sát Bán Hàng
 Chất Lượng (QA/QC)
-Giao Nhận Hàng
-An Toàn Lao Động
-Hóa Học/Hóa Chất
-Xử Lý Nợ
-Kế Toán Thuế
-Kế Toán Kho
-Giao Dịch Viên Ngân Hàng
-Giao Dịch Viên (Tại Quầy)
-Kiểm Toán
-UI/UX
+Quản Lý Sản Phẩm
 Thể Chất
-Offline Marketing (Báo/Đài/Truyền Hình)
-Sự Kiện
-Dựng Phim/Hiệu Ứng Video
-Digital Marketing
-Kiểm Soát Nội Bộ
-Facebook Ads
-Google Ads(AdWords)
-Thiết Kế 3D
 Thiết Kế 2D
+An Toàn Lao Động
+Môi Trường/Xử Lý Chất Thải
+Hóa Học/Hóa Chất
+Kiểm Toán
+Pha Chế Rượu (Bartender)
+Kỹ Sư Bán Hàng (Sale Engineer)
+Javascript
+UI/UX
+Adobe Photoshop
+Thủ Quỹ
+Kế Toán Quản Trị
 Kế Toán Bán Hàng
+Adobe Illustrator
+Dựng Phim/Hiệu Ứng Video
+Spa/Làm Đẹp
+Kỹ Thuật Công Nghiệp
+Chế Tạo Máy
+Nghiên Cứu Và Phát Triển (R&D)
+Chứng Từ
+Trồng Trọt
+Lâm Nghiệp
+Thu Ngân
+FAST
+Misa
+ Làm theo giờ
+Lễ Tân (Receptionist)
+Điện Lạnh/Nhiệt Lạnh
+Thủ Kho
+CAD/CAM
+Quản Lý Điều Hành
+Lập Kế Hoạch
 Vận Hành Sản Xuất
 Giám Sát Sản Xuất
-Adobe Photoshop
-Spa/Làm Đẹp
-Bảo Vệ
-Dự Toán
-Phụ Kho
-Quản Lý Dự Án (IT)
-Thủ Kho
-Kế Toán Xây Dựng
-Đấu Thầu
-Lao Công/Tạp Vụ
-Lái Xe
-ASP.NET
-.NET/C#
 Họa Viên Kiến Trúc
-Big Data/Hadoop
-Machine Learning
-Ruby
-Quản Trị Thương Hiệu (Branding)
-CFA
 QA/Test
-Python
-ACCA
-Vật Tư Sản Xuất
-Dệt May/Da Giày
-IT Helpdesk
-Công Nhân
-Luật
-Bưu Chính Viễn Thông
-Thiết Kế Sản Phẩm
-Thiết Kế Thời Trang
 Thời Trang
-Vận Hành Máy
-Nha Khoa
-Sức Khỏe
-Trang Sức
-Quản Lý Điều Hành
-Nhập Liệu
-Kế Toán Sản Xuất
-Media Planning
-Chế Biến Thực Phẩm
-Phụ Bếp
+Phụ Kho
 Lái Xe Tải
 Giám Sát Kho
-Đào Tạo
-Ngoại Ngữ
-Biên/Phiên Dịch
-Giảng Viên
-Phục Vụ Bàn
-Giám Sát Dịch Vụ
+iOS
+Android
+Thi Công
+Bán thời gian
 Văn Thư/Lưu Trữ
-Chứng Từ
-Giao Hàng(Shipper)
-Thu Mua
-Tìm Nguồn Hàng
-Adobe Premier
-Hoạt Hình (Animation)
-Kỹ Thuật Công Nghiệp
-Tuyển Sinh
-Quản Lý Dự Án
-Vật Tư Xây Dựng
-Lập Kế Hoạch
-Seeding (Forum/Facebook)
-Data Analytics
-Quản Trị Mạng
-Hàn Xì
-Thủ Quỹ
-In Ấn/Xuất Bản
-Nghiên Cứu Và Phát Triển (R&D)
-Media Buying
-CCNA
-CCNP
-Thiết Kế Nội Thất
-Sơn
-Kỹ Sư Cầu Nối
+Kế Toán Xây Dựng
+Sự Kiện
+Google Ads(AdWords)
+Lắp Ráp
+Luật
 Pháp Chế
+An Ninh Mạng
+Kỹ Thuật Camera
+Dệt May/Da Giày
+Vật Tư Sản Xuất
+ACCA
+Phục Vụ Bàn
+Lái Xe
+Công Nhân
+Giao Hàng(Shipper)
+IT Helpdesk
+Quản Lý Dự Án (IT)
+CPA
 Quản Lý Đơn Hàng
-Định Mức
-Phần Cứng Máy Tính/Điện Thoại
-Bàn
-Bếp Trưởng
-SQL
-HRBP
-Giúp Việc
-NodeJS
-Nội Khoa
-Ngoại Khoa
-Tai Mũi Họng
-Pha Chế Rượu (Bartender)
-Pha Chế Cafe (Barista)
+Biên/Phiên Dịch
+Ngoại Ngữ
+Giao Dịch Viên (Tại Quầy)
+Adobe Premier
+In Ấn/Xuất Bản
+Adobe After Effect
+Kết Cấu Công Trình
+Vật Tư Xây Dựng
+Y Tá/Điều Dưỡng
+Nha Khoa
+Media Planning
+Facebook Ads
+Dự Toán
 AccNet
 LinkQ
-Bán thời gian
-Hệ Nhúng
+Data Analytics
+Chế Biến Thực Phẩm
+HRBP
+.NET/C#
+Quản Trị Mạng
 Trợ Giảng
-Chăn Nuôi
-Dầu Khí
-Adobe Illustrator
-Lắp Ráp
-Adobe After Effect
-Chế Tạo Máy
-CPA
-Thiết Kế Game
-Lái Xe Khách
-Thủy Hải Sản
-Thú Y
-Công Nghệ Sinh Học
-Luật Hành Chính
-Hành Lý
-Trồng Trọt
-SAP
-Quản Trị Rủi Ro
+Hoạt Hình (Animation)
+Tìm Nguồn Hàng
+Hàn Xì
 Mộc/Đồ Gỗ
-Buồng Phòng
-Data Warehouse
-Điều Phối Viên
-Trắc Địa
-Kết Cấu Công Trình
-Địa Chất
-Giáo Dục Phổ Thông
+Giao Dịch Viên Ngân Hàng
+ASP.NET
+Bảo Vệ
+Ruby
+NodeJS
+Seeding (Forum/Facebook)
+Đấu Thầu
+Bếp Trưởng
+Phụ Bếp
+CFA
+Công Nghệ Sinh Học
+CCNP
+Media Buying
+Phần Cứng Máy Tính/Điện Thoại
+Trang Sức
 Oracle
-Lái Xe Công Trường
-An Ninh Mạng
-Lâm Nghiệp
-Nghệ Thuật
-Giáo Dục Mầm Non
-Kỹ Thuật Camera
+Sức Khỏe
+SQL
+Kỹ Sư Cầu Nối
+Big Data/Hadoop
+SAP
+Giúp Việc
+Lao Công/Tạp Vụ
+Kiểm Soát Nội Bộ
+Trắc Địa
+Pha Chế Cafe (Barista)
 Lái Xe Nâng
+Lái Xe Khách
+Python
+Machine Learning
+Giáo Dục Phổ Thông
+Giảng Viên
+Buồng Phòng
+Sơn
+Dầu Khí
+Vận Tải/Giao Nhận/Kho Vận
+Bưu Chính Viễn Thông
+Địa Chất
+Chăn Nuôi
+Thú Y
+Luật Hành Chính
+CCNA
+Hành Lý
+Quản Trị Rủi Ro
 Thang Máy
+Giáo Dục Mầm Non
+Data Warehouse
+Lái Xe Công Trường
+Ngoại Khoa
+Thiết Kế Thời Trang
+Thiết Kế Game
+Hệ Nhúng
+Nội Khoa
 Hàng Không/Sân Bay
+Nghệ Thuật
+Định Mức
 Quản lý đất đai
 Giáo Dục Đặc Biệt
 Thiết Kế Vi Mạch
-CeAC
-Vận Tải/Giao Nhận/Kho Vận
+Tai Mũi Họng
 Khách Sạn & Nhà Hàng
 Kinh Doanh/Bán Hàng
 Điện - Điện tử - Điện lạnh

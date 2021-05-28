@@ -6,7 +6,6 @@ import pymongo
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["local"]
 mycol = mydb["alljob"]
-mycol1 = mydb['link']
 
 job123 = read_data.read_mongo(db='crawljob', collection='123job')
 viectotnhat = read_data.read_mongo(db='crawljob', collection='viectotnhat')
@@ -203,7 +202,3 @@ with open("list_types.txt", mode="w", encoding='utf-8') as f:
 
 # alljob_final2.to_json('alljob1.json', orient='records')
 mycol.insert(alljob_final2.to_dict('records'))
-link = alljob_final2['news_link']
-with open("./crawljobdata/crawljobdata/spiders/link.txt", mode="w", encoding='utf-8') as f:
-  for i in link:
-    f.write(i + "\n")

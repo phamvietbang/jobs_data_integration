@@ -6,8 +6,7 @@ from pymongo import MongoClient
 myclient = MongoClient("mongodb://localhost:27017/")
 mydb = myclient["crawljob"]
 mycol = mydb["job_news"]
-with open('link.txt', mode='r') as f:
-    links = f.read().split('\n')
+
 class ViecLam24hSpider(scrapy.Spider):
     name = "vieclam24h"
     source = "vieclam24h.vn"
@@ -20,7 +19,7 @@ class ViecLam24hSpider(scrapy.Spider):
             urls = news_i.css('a')
             detail_page = urls[0].css('::attr(href)').get()
 
-            if detail_page is not None and detail_page not in links:
+            if detail_page is not None:
                 detail_page = response.urljoin(detail_page)
                 yield scrapy.Request(detail_page, callback=self.parse_detail, dont_filter=False) # dont_filter=False means scrapy will not get duplicate links
                 # yield scrapy.Request(author_page, callback=self.parse_author, \

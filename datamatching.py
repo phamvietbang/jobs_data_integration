@@ -11,8 +11,15 @@ Original file is located at
 
 import pandas as pd
 import recordlinkage
+import read_data
+import pymongo
 
-alljob = pd.read_json('')
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+mydb = myclient["local"]
+mycol = mydb["alljob_final_demo"]
+
+alljob = read_data.read_mongo(db='local', collection='alljob')
+alljob = alljob.head(10000)
 alljob = alljob.fillna('')
 alljob.info()
 
@@ -40,10 +47,10 @@ def duplicateData(dataframe, list_drop_data):
 
 list_drop = []
 duplicateData(alljob, list_drop)
-print("Số bản ghi trùng lặp: {}".format(len(list_drop)))
+# print("Số bản ghi trùng lặp: {}".format(len(list_drop)))
 
 for i in list_drop:
   alljob = alljob.drop(i)
 alljob.info()
 
-alljob.to_json('')
+mycol.insert(alljob.to_dict('records'))

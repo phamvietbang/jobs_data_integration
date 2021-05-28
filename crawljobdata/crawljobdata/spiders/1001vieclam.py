@@ -5,8 +5,6 @@ from pymongo import MongoClient
 myclient = MongoClient("mongodb://localhost:27017/")
 mydb = myclient["crawljob"]
 mycol = mydb["1001vieclam"]
-with open('link.txt', mode='r') as f:
-    links = f.read().split('\n')
 
 class vieclam1001(scrapy.Spider):
     name = '1001vieclam'

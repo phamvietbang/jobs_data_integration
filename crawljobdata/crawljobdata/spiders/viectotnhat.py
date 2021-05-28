@@ -6,8 +6,7 @@ from pymongo import MongoClient
 myclient = MongoClient("mongodb://localhost:27017/")
 mydb = myclient["crawljob"]
 mycol = mydb["viectotnhat"]
-with open('link.txt', mode='r') as f:
-    links = f.read().split('\n')
+
 class viectotnhat(scrapy.Spider):
     name = 'viectotnhat'
     allow_domains = ['viectotnhat.com']
@@ -18,9 +17,8 @@ class viectotnhat(scrapy.Spider):
     def parse(self, response):
         urls = response.xpath('//h3[contains(@class, "job-name margin0")]/a/@href').getall()
         for url in urls:
-            if url not in links:
-                url = response.urljoin(url)
-                yield scrapy.Request(url=url, callback=self.parse_details)
+            url = response.urljoin(url)
+            yield scrapy.Request(url=url, callback=self.parse_details)
         next_page_url = response.xpath('//a[contains(@aria-label, "Next")]/@href').get()
         if next_page_url:
             next_page_url = response.urljoin(next_page_url)
