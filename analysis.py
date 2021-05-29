@@ -12,16 +12,16 @@ def tokenize(text):
 def lowercase_filter(tokens):
     return [token.lower() for token in tokens]
 
-def punctuation_filter(tokens):
-    return [PUNCTUATION.sub('', token) for token in tokens]
+def punctuation_filter(text):
+    return PUNCTUATION.sub('', text)
 
 def stopword_filter(tokens):
     return [token for token in tokens if token not in STOPWORDS]
 
 def analyze(text):
+    text = punctuation_filter(text)
     tokens = tokenize(text)
     tokens = lowercase_filter(tokens)
-    tokens = punctuation_filter(tokens)
     tokens = stopword_filter(tokens)
 
     return [token for token in tokens if token]

@@ -45,6 +45,7 @@ class Index:
             return []
 
         analyzed_query = analyze(query)
+        # print(analyzed_query)
         results = self._results(analyzed_query)
         if search_type == 'AND':
             # all tokens must be in the document
