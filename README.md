@@ -1,8 +1,8 @@
-# ui
-### ui for data integration
+# Web tích hợp dữ liệu việc làm
+### UI for data intergration
 ## cài đặt
-### Cài đặt theo requirement
-## chay chương trình
-### python runsystem.py
-### python ex.py
-### vào localhost:8050
+#### Cài đặt theo requirement
+## Chạy chương trình
+#### python runsystem.py
+#### python ex.py
+#### Vào localhost:8050
