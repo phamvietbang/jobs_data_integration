@@ -21,6 +21,8 @@ class JobSumary:
         self.term_frequencies = Counter(analyze(self.fulltext))
 
     def term_frequency(self, term):
+        # A Counter is a dict subclass
+        # dictionary.get(keyname, value) return value as default if keyname does not exist in the dict
         return self.term_frequencies.get(term, 0)
 
 @timing
