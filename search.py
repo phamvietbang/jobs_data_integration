@@ -5,7 +5,7 @@ from collections import Counter
 from dataclasses import dataclass
 import pickle
 from analysis import analyze
-
+import read_data
 @dataclass
 class JobSumary:
     ID: int
@@ -45,16 +45,17 @@ def load_documents(df):
             yield JobSumary(ID=id, title=title, working_location=working_location,\
                 company_name=company_name, types=types)
 
-df0 = pd.read_json('../job_news.json')  
-index = index_documents(load_documents(df0), Index()) 
- 
-with open('index.pkl', 'wb') as index_file:
-    pickle.dump(index, index_file)
-with open('index.pkl', 'rb') as index_file:
-    index = pickle.load(index_file)
-print(f'Index contains {len(index.documents)} documents')
-search_text = "Nhân viên kinh doanh FPT Hà Nội"
-search_result = index.search(search_text, search_type='AND', rank=True)
-print(len(search_result))
-print("Seach text: ", search_text)
-print(df0.loc[search_result[0]])
+if __name__ =="__main__":
+    df0 = read_data.read_mongo(db='local', collection='alljob_final')  
+    index = index_documents(load_documents(df0), Index()) 
+     
+    with open('index.pkl', 'wb') as index_file:
+        pickle.dump(index, index_file)
+# with open('index.pkl', 'rb') as index_file:
+#     index = pickle.load(index_file)
+# print(f'Index contains {len(index.documents)} documents')
+# search_text = "Nhân viên kinh doanh FPT Hà Nội"
+# search_result = index.search(search_text, search_type='AND', rank=True)
+# print(len(search_result))
+# print("Seach text: ", search_text)
+# print(df0.loc[search_result[0]])

@@ -14,8 +14,12 @@ from dataclasses import dataclass
 from analysis import analyze
 from SearchEx import Experience_management
 from SearchSa import SalaryManagement
-import search
+import pickle
+from search import *
 import read_data
+
+with open('index.pkl', 'rb') as index_file:
+    index = pickle.load(index_file)
 
 # Hàm lọc theo giá trị cột Work Location
 def findWorkLocation(d, label, data):
@@ -53,7 +57,7 @@ with open('./list_types.txt', mode='r', encoding='utf-8') as f:
     dtype = f.read().split('\n')
 with open('./list_degree.txt', mode='r', encoding='utf-8') as f:
     ddegree = f.read().split('\n')
-index = search.index_documents(search.load_documents(df), Index())
+# index = search.index_documents(search.load_documents(df), Index())
 df1 = df.head(7000)
 # page layout
 app = dash.Dash(external_stylesheets=['https://codepen.io/chriddyp/pen/bWLwgP.css'])
@@ -63,8 +67,8 @@ app.layout = html.Div([
         html.Div(children=[
             # chưa làm được hàm search
             html.Label('Search'),
-            dcc.Input(id='search', value='Kinh doanh Hà Nội', type='text'),
-            html.Button(id='submit-button-state', n_clicks=0, children='Submit'),
+            dcc.Input(id='search',type='text'),
+            # html.Button(id='submit-button-state', n_clicks=0, children='Tìm kiếm'),
             html.Label('Working_location'),
             dcc.Dropdown(
                 id='location',
@@ -135,7 +139,7 @@ app.layout = html.Div([
                     {'label': 'Vĩnh Phúc', 'value': 'Vĩnh Phúc'},
                     {'label': 'Yên Bái', 'value': 'Yên Bái'},
                 ],
-                value="Hà Nội",
+                # value='',
                 multi=True
             ),
             html.Label('Type'),
@@ -144,7 +148,7 @@ app.layout = html.Div([
                 id='types',
                 # Nên sử dụng dạng sau:
                 options=[{'label': i, 'value': i} for i in dtype],
-                value="Chăm Sóc Khách Hàng",
+                # value="",
                 multi=True
             ),
 
@@ -154,13 +158,13 @@ app.layout = html.Div([
             'From ',
             dcc.Input(
                 id="s1",
-                value=1,
+                # value=1,
                 type="number"
             ),
             ' to ',
             dcc.Input(
                 id="s2",
-                value=5,
+                # value=5,
                 type="number",
                 size='15'
             ),
@@ -169,13 +173,13 @@ app.layout = html.Div([
             'From ',
             dcc.Input(
                 id="e1",
-                value=1,
+                # value=1,
                 type="number"
             ),
             ' to ',
             dcc.Input(
                 id="e2",
-                value=5,
+                # value=5,
                 type="number",
             ),
             ' Years',
@@ -183,7 +187,7 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='degree',
                 options=[{'label': i, 'value': i} for i in ddegree],
-                value='Không yêu cầu',
+                # value='',
                 multi=True
             ),
 
@@ -197,11 +201,12 @@ app.layout = html.Div([
                     {'label': u'Nữ', 'value': 'Nữ'},
                     {'label': 'Không yêu cầu', 'value': 'Không yêu cầu'},
                 ],
-                value='Nữ',
+                value='',
                 labelStyle={'display': 'block'}
-            )
-
+            ),
+            html.Button(id='submit-button-state-all', n_clicks=0, children='Lọc'),
         ], style={'display': 'inline-block', 'vertical-align': 'top', 'margin-left': '5%', 'margin-top': '3vw'}),
+        
     ], className='row'),
 
     # second row
@@ -219,11 +224,11 @@ app.layout = html.Div([
             css=[{
                 'selector': '.dash-spreadsheet td div',
                 'rule': '''
-								line-height: 15px;
-								max-height: 30px; min-height: 30px; height: 30px;
-								display: block;
-								overflow-y: hidden;
-						'''
+                                line-height: 15px;
+                                max-height: 30px; min-height: 30px; height: 30px;
+                                display: block;
+                                overflow-y: hidden;
+                        '''
             }],
             tooltip_data=[
                 {
@@ -260,42 +265,45 @@ app.layout = html.Div([
 @app.callback(
     Output(component_id='datatable-interactivity', component_property='data'),
     Output(component_id='datatable-interactivity', component_property='tooltip_data'),
-    Input(component_id='location', component_property='value'),
-    Input(component_id='types', component_property='value'),
-    Input(component_id='degree', component_property='value'),
-    Input(component_id='gender', component_property='value'),
-    Input(component_id='s1', component_property='value'),
-    Input(component_id='s2', component_property='value'),
-    Input(component_id='e1', component_property='value'),
-    Input(component_id='e2', component_property='value'),
-    Input('submit-button-state', 'n_clicks'),
+    Input('submit-button-state-all', 'n_clicks'),
     State('search', 'value'),
+    State(component_id='location', component_property='value'),
+    State(component_id='types', component_property='value'),
+    State(component_id='degree', component_property='value'),
+    State(component_id='gender', component_property='value'),
+    State(component_id='s1', component_property='value'),
+    State(component_id='s2', component_property='value'),
+    State(component_id='e1', component_property='value'),
+    State(component_id='e2', component_property='value'),
 )
 # def update_data(search_, location_, types_, degree_, experience_, gender_):
-def update_data(location_, types_, degree_, gender_, s1, s2, e1, e2, n_click, search_):
+def update_data(n_click, search_, location_, types_, degree_, gender_, s1, s2, e1, e2):
     dff = df
-    if search_ != '':
+    if search_ != None and len(search_)!=0:
         dff = searchItems(dff, index, search_)
-    if gender_ != '':
+    if len(gender_)!=0:
         dff = dff[dff['gender'] == gender_]
-    if degree_ != '':
+    if degree_ != None and len(degree_)!=0:
         dff = findTypes(dff, 'degree', degree_)
-    if location_ != []:
+    if location_ != None and len(location_)!=0:
         dff = findWorkLocation(dff, 'working_location', location_)
-    if types_ != []:
+    if types_ != None and len(location_)!=0:
         dff = findTypes(dff, 'types', types_)
-    if e1 >= 0 and e2 >= 0:
+    if e1 !=None and e2 != None:
         experience_management = Experience_management(dff)
         valid_records = experience_management.get_experience(e1, e2, 70000)
-        if valid_records != []:
+        if len(valid_records)!=0:
             dff = pd.concat(valid_records)
-    if s1 >= 0 and s2 >= 0:
+        if len(valid_records)==0: dff=dff.head(0)
+    if s1 !=None and s2 !=None:
         salarymanagement = SalaryManagement(dff)
         min_salary = float(s1 * 1000000)
         max_salary = float(s2 * 1000000)
         valid_records = salarymanagement.get_salary(min_salary, max_salary, 70000)
-        if valid_records != []:
+        if len(valid_records)!=0:
             dff = pd.concat(valid_records)
+        if len(valid_records)==0: dff=dff.head(0)
+
     dff = dff.head(7000)
     data = dff.to_dict('records')
     tooltip_data = [
