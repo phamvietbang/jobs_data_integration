@@ -1,0 +1,10 @@
+beautifulsoup4
+lxml
+scrapy
+requests==2.25.1
+selenium
+dash document
+scrapy_proxy_pool
+scrapy-random-useragent
+dataclasses
+pyvi

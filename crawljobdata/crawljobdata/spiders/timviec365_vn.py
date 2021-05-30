@@ -1,7 +1,9 @@
 import scrapy
 from scrapy.loader import ItemLoader
-from crawljobdata.items import JobNewsItem
+from ..items import JobNewsItem
 from datetime import datetime
+from pymongo import MongoClient
+
 myclient = MongoClient("mongodb://localhost:27017/")
 mydb = myclient["crawljob"]
 mycol = mydb["job_news"]

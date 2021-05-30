@@ -29,7 +29,7 @@ def init_browser(type):
         options.add_argument('--log-level=3')
         options.add_argument('--silent')
         browser = webdriver.Chrome(options=options,
-                                   executable_path='C:/Users/super/OneDrive/Desktop/data_integration/chromedriver')
+                                   executable_path='chromedriver.exe')
     else:
         raise Exception("Browser is not supported!")
     return browser

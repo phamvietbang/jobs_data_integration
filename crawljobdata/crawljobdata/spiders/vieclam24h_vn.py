@@ -1,6 +1,6 @@
 import scrapy
 from scrapy.loader import ItemLoader
-from job_news.items import JobNewsItem
+from ..items import JobNewsItem
 from datetime import datetime
 from pymongo import MongoClient
 myclient = MongoClient("mongodb://localhost:27017/")

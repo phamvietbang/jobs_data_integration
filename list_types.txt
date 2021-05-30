@@ -496,6 +496,18 @@ Báo chí/ Biên tập viên
 Bán hàng, 				Dịch vụ khách hàng, 				Kế toán/kiểm toán, 				Marketing/tiếp thị, 				Tư vấn
 Bất động sản, 				Giám sát/ trưởng nhóm, 				Kinh doanh/Phụ trách KH
 Bất động sản, 				Kinh doanh/Phụ trách KH, 				Tư vấn
+Bán hàng, 				Tư vấn
+Bán hàng, 				Kinh doanh/Phụ trách KH
+Bán hàng, 				Marketing/tiếp thị, 				Tư vấn
+Kinh doanh/Phụ trách KH, 				Kiểm soát chất lượng, 				Pháp lý, 				Quản lý điều hành, 				Vận chuyển/Vật tư
+Bán hàng, 				Dịch vụ khách hàng, 				Giám sát/ trưởng nhóm, 				Giám đốc-Quản trị, 				Giáo dục - Đào tạo
+Bán hàng, 				Bảo hiểm, 				Bất động sản
+Kinh doanh/Phụ trách KH, 				Quảng cáo / PR, 				Tư vấn
+Dịch vụ khách hàng, 				Hành chánh/Thư ký, 				Mới tốt nghiệp/Thực tập, 				Tài chánh/Ngân hàng, 				Tư vấn
+Dịch vụ khách hàng, 				Kinh doanh/Phụ trách KH, 				Tài chánh/Ngân hàng, 				Tư vấn
+Khác, 				Kế toán/kiểm toán, 				Nhân sự, 				Pháp lý
+Biên-phiên dịch, 				Bán hàng, 				Khác, 				Lao động có tay nghề, 				Lao động phổ thông
+Dịch vụ khách hàng, 				Mới tốt nghiệp/Thực tập, 				Tài chánh/Ngân hàng, 				Tư vấn
 Bán lẻ / Bán sỉ
 Bán hàng / Kinh doanh
 Tiếp thị trực tuyến
